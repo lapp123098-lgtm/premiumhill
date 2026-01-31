@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verdant Peaks | Premium Hill Tourism</title>
+    <style>
+        /* --- CSS Variables & Reset --- */
+        :root {
+            /* Palette: Premium Greens & Earth Tones */
+            --color-bg: #f4f7f4;
+            --color-primary: #1b4d3e; /* Deep Forest Green */
+            --color-secondary: #4a7c59; /* Medium Leaf Green */
+            --color-accent: #d4af37; /* Gold for premium feel */
+            --color-text-main: #2c3e50;
+            --color-text-light: #ecf0f1;
+            --color-white: #ffffff;
+            --color-success: #27ae60;
+            --color-warning: #f39c12;
+            --color-danger: #c0392b;
+            
+            --shadow-card: 0 10px 20px rgba(0,0,0,0.08);
+            --shadow-hover: 0 15px 30px rgba(0,0,0,0.15);
+            --radius: 8px;
+            --font-heading: 'Georgia', serif;
+            --font-body: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--color-bg);
+            color: var(--color-text-main);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* --- Typography --- */
+        h1, h2, h3 {
+            font-family: var(--font-heading);
+            color: var(--color-primary);
+        }
+
+        a { text-decoration: none; color: inherit; transition: 0.3s; }
+        ul { list-style: none; }
+
+        /* --- Components: Buttons --- */
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            border-radius: var(--radius);
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .btn-primary {
+            background-color: var(--color-primary);
+            color: var(--color-white);
+        }
+        .btn-primary:hover { background-color: #143d32; transform: translateY(-2px); }
+
+        .btn-accent {
+            background-color: var(--color-accent);
+            color: var(--color-white);
+        }
+        .btn-accent:hover { background-color: #b5952f; transform: translateY(-2px); }
+
+        .btn-outline {
+            border: 2px solid var(--color-primary);
+            color: var(--color-primary);
+            background: transparent;
+        }
+        .btn-outline:hover { background: var(--color-primary); color: white; }
+
+        .btn-sm { padding: 6px 12px; font-size: 0.85rem; }
+        
+        /* --- Navigation --- */
+        header {
+            background-color: var(--color-primary);
+            color: var(--color-white);
+            padding: 1rem 5%;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: var(--font-heading);
+            font-size: 1.8rem;
+            color: var(--color-accent);
+            letter-spacing: 1px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a:hover { color: var(--color-accent); }
+
+        /* --- View Management --- */
+        .view-section {
+            display: none; /* Hidden by default */
+            animation: fadeIn 0.5s ease;
+            flex: 1;
+        }
+        
+        .view-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            position: relative;
+            height: 80vh;
+            background: linear-gradient(rgba(27, 77, 62, 0.7), rgba(27, 77, 62, 0.4)), url('bahaan/cici\ wildan.jpg');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            padding: 0 20px;
+        }
+
+        .hero-content h1 {
+            font-size: 3.5rem;
+            color: var(--color-white);
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        .hero-content p {
+            font-size: 1.25rem;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* --- Destinations Grid --- */
+        .container {
+            max-width: 1200px;
+            margin: 4rem auto;
+            padding: 0 20px;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+            font-size: 2.5rem;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 3px;
+            background: var(--color-accent);
+            margin: 10px auto 0;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .card {
+            background: var(--color-white);
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow-card);
+            transition: transform 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .card-img {
+            height: 220px;
+            width: 100%;
+            object-fit: cover;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .card-title {
+            font-size: 1.4rem;
+            margin-bottom: 0.5rem;
+            color: var(--color-primary);
+        }
+
+        .card-price {
+            color: var(--color-accent);
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .card-desc {
+            color: #666;
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+            flex: 1;
+        }
+
+        /* --- Booking Section --- */
+        .booking-section {
+            background-color: #e8ece8;
+            padding: 4rem 20px;
+        }
+
+        .booking-form {
+            background: var(--color-white);
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 2.5rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-card);
+            border-top: 5px solid var(--color-secondary);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--color-primary);
+            font-weight: 600;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 1rem;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--color-secondary);
+            box-shadow: 0 0 0 3px rgba(74, 124, 89, 0.2);
+        }
+
+        /* --- Admin Dashboard --- */
+        .admin-dashboard {
+            padding: 2rem 5%;
+            background-color: #f0f4f0;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #ddd;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border-left: 4px solid var(--color-primary);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--color-primary);
+        }
+
+        .table-container {
+            overflow-x: auto;
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-card);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            background-color: var(--color-primary);
+            color: white;
+        }
+
+        tr:hover { background-color: #f9f9f9; }
+
+        .badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-pending { background-color: var(--color-warning); color: #fff; }
+        .status-approved { background-color: var(--color-success); color: #fff; }
+        .status-rejected { background-color: var(--color-danger); color: #fff; }
+
+        /* --- Login Modal (Simulated) --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.6);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            backdrop-filter: blur(5px);
+        }
+        
+        .modal-overlay.active { display: flex; }
+
+        .login-box {
+            background: white;
+            padding: 2.5rem;
+            border-radius: var(--radius);
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            position: relative;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px; right: 20px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #888;
+        }
+
+        /* --- Footer --- */
+        footer {
+            background-color: var(--color-primary);
+            color: #ccc;
+            text-align: center;
+            padding: 2rem;
+            margin-top: auto;
+        }
+
+        /* --- Notification Toast --- */
+        #toast {
+            visibility: hidden;
+            min-width: 250px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 4px;
+            padding: 16px;
+            position: fixed;
+            z-index: 3000;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        #toast.show {
+            visibility: visible;
+            animation: fadein 0.5s, fadeout 0.5s 2.5s;
+        }
+
+        @keyframes fadein {
+            from {bottom: 0; opacity: 0;}
+            to {bottom: 30px; opacity: 1;}
+        }
+        @keyframes fadeout {
+            from {bottom: 30px; opacity: 1;}
+            to {bottom: 0; opacity: 0;}
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-content h1 { font-size: 2.5rem; }
+            .nav-links { display: none; } /* Simplified for mobile demo */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Notification Toast -->
+    <div id="toast">Message here</div>
+
+    <!-- Navigation -->
+    <header>
+        <nav>
+            <div class="logo">Bukit Premium</div>
+            <ul class="nav-links">
+                <li><a href="#" onclick="showView('home')">Home</a></li>
+                <li><a href="#destinations" onclick="showView('home')">Destinations</a></li>
+                <li><a href="#contact" onclick="showView('home')">Contact</a></li>
+                <li><a href="#" onclick="openLoginModal()" style="color: var(--color-accent);">Admin Login</a></li>
+            </ul>
+            <!-- Mobile Menu Button placeholder -->
+            <div class="mobile-menu" style="display:none;">☰</div>
+        </nav>
+    </header>
+
+    <main id="app">
+        <!-- ================= HOME VIEW ================= -->
+        <section id="view-home" class="view-section active">
+            <!-- Hero -->
+            <div class="hero">
+                <div class="hero-content">
+                    <h1>Selamat Datang Di Keindahan</h1>
+                    <p>Silahkan menikmati keindahan dan kekayaan alam yang diciptakan oleh Yang Maha Esa</p>
+                    <button class="btn btn-accent" onclick="document.getElementById('booking-section').scrollIntoView({behavior: 'smooth'})">Book Your Stay</button>
+                    <button class="btn btn-outline" style="border-color:white; color:white; margin-left:10px;" onclick="document.getElementById('destinations').scrollIntoView({behavior: 'smooth'})">Explore Destinations</button>
+                </div>
+            </div>
+
+            <!-- Destinations -->
+            <div id="destinations" class="container">
+                <h2 class="section-title">Premium Destinations</h2>
+                <div class="grid">
+                    <!-- Card 1 -->
+                    <div class="card">
+                        <img src="bahaan/cici.jpeg" alt="Misty Valley" class="card-img">
+                        <div class="card-body">
+                            <h3 class="card-title">bermalam</h3>
+                            <div class="card-price">Rp 54.000 / malam</div>
+                            <p class="card-desc">Bermalam bisa menyaksikan sunset sampai sunrise dan dijamin aman ketika anda tidak sesuka hati</p>
+                            <button class="btn btn-primary" onclick="prefillBooking('Misty Valley Resort')">Pesan Sekarang</button>
+                        </div>
+                    </div>
+                    <!-- Card 2 -->
+                    <div class="card">
+                        <img src="bahaan/wildan and cici.jpg" alt="Alpine Summit" class="card-img">
+                        <div class="card-body">
+                            <h3 class="card-title">sewa tenda</h3>
+                            <div class="card-price">Rp 45.000 / malam</div>
+                            <p class="card-desc">Sewa tenda bisa membuat badan menjadi hangat ketika kalian bermalam.</p>
+                            <button class="btn btn-primary" onclick="prefillBooking('Alpine Summit Lodge')"oo>Pesan Sekarang</button>
+                        </div>
+                    </div>
+                    <!-- Card 3 -->
+                    <div class="card">
+                        <img src="bahaan/wildan lop cici.jpg" alt="Emerald Forest" class="card-img">
+                        <div class="card-body">
+                            <h3 class="card-title">ojek</h3>
+                            <div class="card-price">Rp 50.000 / malam</div>
+                            <p class="card-desc">Apabila kalian mempunyai penyakit atau tidak kuat mendaki, kalian bisa menyewa jasa ojek disini.</p>
+                            <button class="btn btn-primary" onclick="prefillBooking('Emerald Forest Villa')">Pesan Sekarang</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Booking Form -->
+            <div id="booking-section" class="booking-section">
+                <div class="container">
+                    <h2 class="section-title">Silahkan Membayar</h2>
+                    <div class="booking-form">
+                        <form id="bookingForm" onsubmit="handleBookingSubmit(event)">
+                            <div class="form-group">
+                                <label for="name">Nama Lengkap</label>
+                                <input type="text" id="name" class="form-control" placeholder="Qin Shin Huang" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="package">Pilih paket</label>
+                                <select id="package" class="form-control" required>
+                                    <option value="" disabled selected>Pilih Tujuan...</option>
+                                    <option value="Misty Valley Resort">Bermalam</option>
+                                    <option value="Alpine Summit Lodge">Sewa Tenda</option>
+                                    <option value="Emerald Forest Villa">Ojek</option>
+                                </select>
+                            </div>
+                            <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+                                <div class="form-group" style="margin-bottom:0;">
+                                    <label for="date">Tanggal</label>
+                                    <input type="date" id="date" class="form-control" required>
+                                </div>
+                                <div class="form-group" style="margin-bottom:0;">
+                                    <label for="guests">Jumlah</label>
+                                    <input type="number" id="guests" class="form-control" min="1" value="2" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="amount">Total biaya (Rp)</label>
+                                <input type="number" id="amount" class="form-control" placeholder="e.g. 900" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary" style="width: 100%;">Proceed to Payment</button>
+                            <p style="text-align: center; margin-top: 10px; font-size: 0.85rem; color: #777;">
+                                Note: Your booking will appear as "Pending" until approved by Admin.
+                            </p>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= ADMIN VIEW ================= -->
+        <section id="view-admin" class="view-section">
+            <div class="admin-dashboard">
+                <div class="dashboard-header">
+                    <div>
+                        <h2>Admin Dashboard</h2>
+                        <p>Manage bookings and payments</p>
+                    </div>
+                    <button class="btn btn-outline" onclick="logout()">Logout</button>
+                </div>
+
+                <!-- Stats -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div>Total Bookings</div>
+                        <div class="stat-number" id="stat-total">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div>Pending Approval</div>
+                        <div class="stat-number" style="color: var(--color-warning);" id="stat-pending">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div>Revenue (Approved)</div>
+                        <div class="stat-number" style="color: var(--color-success);" id="stat-revenue">$0</div>
+                    </div>
+                </div>
+
+                <!-- Table -->
+                <div class="table-container">
+                    <table id="bookingTable">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Customer</th>
+                                <th>Package</th>
+                                <th>Date</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                            <!-- Rows inserted via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2023 Verdant Peaks Tourism. All rights reserved.</p>
+    </footer>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal-overlay">
+        <div class="login-box">
+            <span class="close-modal" onclick="closeLoginModal()">&times;</span>
+            <h2 style="margin-bottom: 1.5rem; text-align: center;">Admin Access</h2>
+            <form onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="adminPass" class="form-control" placeholder="Enter password (admin)" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Login</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // --- DATA MANAGEMENT ---
+        
+        // Initial Mock Data
+        const initialBookings = [
+            { id: 101, name: "Sarah Connor", package: "Misty Valley Resort", date: "2023-11-15", amount: 900, status: "Pending" },
+            { id: 102, name: "James Bond", package: "Alpine Summit Lodge", date: "2023-12-01", amount: 640, status: "Approved" },
+            { id: 103, name: "Bruce Wayne", package: "Emerald Forest Villa", date: "2023-11-20", amount: 1800, status: "Rejected" }
+        ];
+
+        // Load data from LocalStorage or use initial
+        let bookings = JSON.parse(localStorage.getItem('hillTourismBookings')) || initialBookings;
+
+        // --- NAVIGATION & UI ---
+
+        function showView(viewName) {
+            // Hide all sections
+            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+            
+            if(viewName === 'home') {
+                document.getElementById('view-home').classList.add('active');
+                window.scrollTo(0,0);
+            } else if (viewName === 'admin') {
+                document.getElementById('view-admin').classList.add('active');
+                renderAdminTable(); // Refresh table
+                updateStats();
+            }
+        }
+
+        function openLoginModal() {
+            document.getElementById('loginModal').classList.add('active');
+            document.getElementById('adminPass').value = '';
+        }
+
+        function closeLoginModal() {
+            document.getElementById('loginModal').classList.remove('active');
+        }
+
+        function showToast(message) {
+            const x = document.getElementById("toast");
+            x.textContent = message;
+            x.className = "show";
+            setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+        }
+
+        // --- USER FUNCTIONS ---
+
+        function prefillBooking(packageName) {
+            document.getElementById('booking-section').scrollIntoView({behavior: 'smooth'});
+            document.getElementById('package').value = packageName;
+        }
+
+        function handleBookingSubmit(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('name').value;
+            const pkg = document.getElementById('package').value;
+            const date = document.getElementById('date').value;
+            const amount = parseFloat(document.getElementById('amount').value);
+            
+            // Create new booking object
+            const newBooking = {
+                id: Math.floor(Math.random() * 10000) + 1000,
+                name: name,
+                package: pkg,
+                date: date,
+                amount: amount,
+                status: "Pending"
+            };
+
+            // Save to array and localStorage
+            bookings.push(newBooking);
+            localStorage.setItem('hillTourismBookings', JSON.stringify(bookings));
+
+            // Reset form and show feedback
+            document.getElementById('bookingForm').reset();
+            showToast("Booking Request Sent! Awaiting Admin Approval.");
+        }
+
+        // --- ADMIN FUNCTIONS ---
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const pass = document.getElementById('adminPass').value;
+            if(pass === 'admin') {
+                closeLoginModal();
+                showView('admin');
+                showToast("Welcome back, Admin.");
+            } else {
+                showToast("Incorrect Password.");
+            }
+        }
+
+        function logout() {
+            showView('home');
+            showToast("Logged out successfully.");
+        }
+
+        function renderAdminTable() {
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = '';
+
+            // Sort by ID descending (newest first)
+            const sortedBookings = [...bookings].sort((a, b) => b.id - a.id);
+
+            sortedBookings.forEach(booking => {
+                let statusClass = '';
+                if(booking.status === 'Approved') statusClass = 'status-approved';
+                else if(booking.status === 'Rejected') statusClass = 'status-rejected';
+                else statusClass = 'status-pending';
+
+                // Actions HTML only if Pending
+                let actionsHtml = '';
+                if(booking.status === 'Pending') {
+                    actionsHtml = `
+                        <button class="btn btn-sm btn-primary" onclick="updateStatus(${booking.id}, 'Approved')">Approve</button>
+                        <button class="btn btn-sm btn-outline" style="color:var(--color-danger); border-color:var(--color-danger);" onclick="updateStatus(${booking.id}, 'Rejected')">Reject</button>
+                    `;
+                } else {
+                    actionsHtml = `<span style="color:#aaa; font-size:0.8rem;">No actions</span>`;
+                }
+
+                const row = `
+                    <tr>
+                        <td>#${booking.id}</td>
+                        <td><strong>${booking.name}</strong></td>
+                        <td>${booking.package}</td>
+                        <td>${booking.date}</td>
+                        <td>$${booking.amount}</td>
+                        <td><span class="badge ${statusClass}">${booking.status}</span></td>
+                        <td>
+                            <div style="display:flex; gap:5px;">${actionsHtml}</div>
+                        </td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+        }
+
+        function updateStatus(id, newStatus) {
+            const index = bookings.findIndex(b => b.id === id);
+            if(index !== -1) {
+                bookings[index].status = newStatus;
+                localStorage.setItem('hillTourismBookings', JSON.stringify(bookings));
+                renderAdminTable();
+                updateStats();
+                showToast(`Booking #${id} marked as ${newStatus}.`);
+            }
+        }
+
+        function updateStats() {
+            const total = bookings.length;
+            const pending = bookings.filter(b => b.status === 'Pending').length;
+            const revenue = bookings
+                .filter(b => b.status === 'Approved')
+                .reduce((sum, b) => sum + b.amount, 0);
+
+            document.getElementById('stat-total').textContent = total;
+            document.getElementById('stat-pending').textContent = pending;
+            document.getElementById('stat-revenue').textContent = '$' + revenue.toLocaleString();
+        }
+
+        // Close modal if clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('loginModal');
+            if (event.target == modal) {
+                closeLoginModal();
+            }
+        }
+    </script>
+</body>
+</html>
